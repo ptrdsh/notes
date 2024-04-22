@@ -1,6 +1,6 @@
-##############################
+
 # Recovery Phrase and root
-##############################
+
 
 
 ## Generate a seed phrase (and back it up!)
@@ -10,9 +10,9 @@ cardano-address recovery-phrase generate --size 24 > phrase.prv
 cardano-address key from-recovery-phrase Shelley < phrase.prv > root.xsk
 
 
-##########################################
+
 # Create CC COLD KEY
-##########################################
+
 
 ## generate ext priv skey (cardano-address-key format)
 cardano-address key child 1852H/1815H/1H/4/0  < root.xsk > cc_cold.skey.tmp
@@ -31,9 +31,9 @@ cardano-cli key non-extended-key --extended-verification-key-file cc_cold.vkey.t
 
 
 
-##########################################
+
 # Create CC HOT KEY *(skip this step if a script hash becomes the HOT KEY)*
-##########################################
+
 
 
 ## generate ext priv skey (cardano-address-key format)
@@ -55,9 +55,9 @@ cardano-cli key verification-key --signing-key-file  cc_hot.skey--verification-k
 cardano-cli key non-extended-key --extended-verification-key-file cc_hot.vkey.tmp --verification-key-file cc_hot.vkey
 
 
-##########################################
+
 # create CC SCRIPT AUTH KEYS *(these would be the keys referenced in the script*)
-##########################################
+
 
 If these keys are not generated as stand-alone keys, they follow this schema: 
 COLD KEY 1           -> (HOT KEY doesnt exist)          -> authorized key in script
@@ -99,9 +99,9 @@ cardano-address script hash "at_least 2 [$(cat cc_hot_100.addr), $(cat cc_hot_20
 
 
 
-##########################################
+
 # Create cold-to-hot auth certificate and broadcast
-##########################################
+
 
 ## create cert
 cardano-cli conway governance committee create-hot-key-authorization-certificate \

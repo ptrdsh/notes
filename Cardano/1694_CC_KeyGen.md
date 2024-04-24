@@ -29,12 +29,28 @@ cardano-cli key verification-key --signing-key-file  cc_cold.skey --verification
 ## cc cold vkey - NODE-CLI KEY
 cardano-cli key non-extended-key --extended-verification-key-file cc_cold.vkey.tmp --verification-key-file cc_cold.vkey
 
+## edit cc_cold.vkey type name (and description) to: 
+{
+"type": "ConstitutionalCommitteeColdVerificationKey_ed25519",
+"description" : "Constitutional Committee Cold Verification Key",
+"cborHex" : "keyHereInHex"
+}
+
+## edit cc_cold.skey type name (and description) to: 
+{
+"type": "ConstitutionalCommitteeColdSigningKey_ed25519",
+"description" : "Constitutional Committee Cold Signing Key",
+"cborHex" : "keyHereInHex"
+}
+
+## get hashes, which go in the chain config or a Governance Action
+cardano-cli conway governance committee key-hash --verification-key-file cc_cold.vkey > cc_cold.hash
+
+
 
 
 
 # Create CC HOT KEY *(skip this step if a script hash becomes the HOT KEY)*
-
-
 
 ## generate ext priv skey (cardano-address-key format)
 cardano-address key child 1852H/1815H/1H/5/0  < root.xsk > cc_hot.skey.tmp

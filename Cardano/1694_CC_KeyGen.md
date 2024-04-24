@@ -65,43 +65,11 @@ cardano-cli conway governance committee key-hash --verification-key-file cc_cold
 
 
 ________________________
-## Create CC HOT KEY *(skip this step if a script hash becomes the HOT KEY)*
+## Keys schema 
 
-### generate ext priv skey (cardano-address-key format)
-```console
-cardano-address key child 1852H/1815H/1H/5/n  < root.xsk > cc_hot.skey.tmp
-```
-with `n` being the index as per the schema below (first key has index 100).
+If these keys are not generated as stand-alone keys, then they follow this schema.
+the keys "authorized" in a script, are those keys that go in the script. In this schema, we still derive them from the same root as the cold keys.
 
-
-##### (second, nth HOT KEY)
-```console
-cardano-address key child 1852H/1815H/1H/5/n+1  < root.xsk > cc_hot_ *n*.skey.tmp
-```
-with `n` being the index as per the schema below (second key has index 200).
-
-### CONVERTING cardano-address-key to NODE-CLI KEY
-
-##### cc hot skey - NODE-CLI KEY
-```console
-cardano-cli key convert-cardano-address-key --shelley-payment-key --signing-key-file cc_hot.skey.tmp --out-file cc_hot.skey
-```
-
-##### intermediate step
-```console
-cardano-cli key verification-key --signing-key-file  cc_hot.skey--verification-key-file cc_hot.vkey.tmp
-```
-
-##### cc hot vkey - NODE-CLI KEY
-```console
-cardano-cli key non-extended-key --extended-verification-key-file cc_hot.vkey.tmp --verification-key-file cc_hot.vkey
-```
-
-________________________
-## create CC SCRIPT AUTH KEYS *(these would be the keys referenced in the script*)
-
-
-If these keys are not generated as stand-alone keys, they follow this schema: 
 ```
 COLD KEY 1           -> (HOT KEY doesnt exist)          -> authorized key in script
 1852H/1815H/1H/4/0   -> script hash 1 e.g. 3 of 5       -> 1852H/1815H/1H/5/100
@@ -129,6 +97,57 @@ COLD KEY 2           -> (HOT KEY doesnt exist)          -> authorized key in scr
 1852H/1815H/1H/4/1   -> (would be: 1852H/1815H/1H/5/4)  -> 1852H/1815H/1H/5/204
 1852H/1815H/1H/4/1   ->                                 -> 1852H/1815H/1H/5/304
 ```
+
+ Those keys are enveloped as such: 
+```json
+{
+"type": "PaymentVerificationKeyShelley_ed25519",
+"description" : "Payment Verification Key",
+"cborHex" : "keyHereInHex"
+}
+```
+
+
+________________________
+## Create CC HOT KEY *(skip this step if a script hash becomes the HOT KEY)*
+
+### generate ext priv skey (cardano-address-key format)
+```console
+cardano-address key child 1852H/1815H/1H/5/n  < root.xsk > cc_hot.skey.tmp
+```
+with `n` being the index as per the schema below (first key has index 100).
+
+
+#### (second, nth HOT KEY)
+```console
+cardano-address key child 1852H/1815H/1H/5/n+1  < root.xsk > cc_hot_ *n*.skey.tmp
+```
+with `n` being the index as per the schema below (second key has index 200).
+
+### CONVERTING cardano-address-key to NODE-CLI KEY
+
+#### cc hot skey - NODE-CLI KEY
+```console
+cardano-cli key convert-cardano-address-key --shelley-payment-key --signing-key-file cc_hot.skey.tmp --out-file cc_hot.skey
+```
+
+#### intermediate step
+```console
+cardano-cli key verification-key --signing-key-file  cc_hot.skey--verification-key-file cc_hot.vkey.tmp
+```
+
+#### cc hot vkey - NODE-CLI KEY
+```console
+cardano-cli key non-extended-key --extended-verification-key-file cc_hot.vkey.tmp --verification-key-file cc_hot.vkey
+```
+
+________________________
+## create CC SCRIPT HOT KEYS *(these would be the keys referenced in the script*)
+
+
+............
+
+
 
 
 ### get the address assosiated with each hot credential:

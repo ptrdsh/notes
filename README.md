@@ -1,2 +1,2 @@
 # notes
-Collection of ramblings and interesting things
+Collection of ramblings, documentation and interesting things

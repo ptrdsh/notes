@@ -1,4 +1,4 @@
-# Internal Guide to generate CC keys 
+# Internal Guide to generate CC keys
 this is a guide and documentation for CC key handling. 
 Its WIP!
 
@@ -15,7 +15,30 @@ cardano-address key from-recovery-phrase Shelley < phrase.prv > root.xsk
 ```
 
 ________________________
+##########################################
+## Create DREP
+##########################################
+
+## generate ext priv skey (cardano-address-key format)
+cardano-address key child 1852H/1815H/1H/3/0  < root.xsk > drep_cold.skey.tmp
+
+
+## CONVERTING cardano-address-key to NODE-CLI KEY
+
+## cc cold skey - NODE-CLI KEY
+cardano-cli key convert-cardano-address-key --shelley-payment-key --signing-key-file drep_cold.skey.tmp --out-file drep_cold.skey
+
+## intermediate step
+cardano-cli key verification-key --signing-key-file  drep_cold.skey --verification-key-file drep_cold.vkey.tmp
+
+## cc cold vkey - NODE-CLI KEY
+cardano-cli key non-extended-key --extended-verification-key-file cc_cold.vkey.tmp --verification-key-file cc_cold.vkey
+
+________________________
+##########################################
 ## Create CC COLD KEY
+##########################################
+
 
 ### generate ext priv skey (cardano-address-key format)
 ```console
@@ -39,7 +62,7 @@ cardano-cli key verification-key --signing-key-file  cc_cold.skey --verification
 cardano-cli key non-extended-key --extended-verification-key-file cc_cold.vkey.tmp --verification-key-file cc_cold.vkey
 ```
 
-### edit cc_cold.vkey type name (and description) to: 
+### edit cc_cold.vkey type name (and description) to:
 ```json
 {
 "type": "ConstitutionalCommitteeColdVerificationKey_ed25519",
@@ -48,7 +71,7 @@ cardano-cli key non-extended-key --extended-verification-key-file cc_cold.vkey.t
 }
 ```
 
-### edit cc_cold.skey type name (and description) to: 
+### edit cc_cold.skey type name (and description) to:
 ```json
 {
 "type": "ConstitutionalCommitteeColdSigningKey_ed25519",
@@ -65,7 +88,9 @@ cardano-cli conway governance committee key-hash --verification-key-file cc_cold
 
 
 ________________________
-## Keys schema 
+##########################################
+## Keys schema
+##########################################
 
 If these keys are not generated as stand-alone keys, then they follow this schema.
 the keys "authorized" in a script, are those keys that go in the script. In this schema, we still derive them from the same root as the cold keys.
@@ -109,7 +134,9 @@ COLD KEY 2           -> (HOT KEY doesnt exist)          -> authorized key in scr
 
 
 ________________________
+##########################################
 ## Create CC HOT KEY *(skip this step if a script hash becomes the HOT KEY)*
+##########################################
 
 ### generate ext priv skey (cardano-address-key format)
 ```console
@@ -142,8 +169,9 @@ cardano-cli key non-extended-key --extended-verification-key-file cc_hot.vkey.tm
 ```
 
 ________________________
+##########################################
 ## create CC SCRIPT HOT KEYS *(these would be the keys referenced in the script*)
-
+##########################################
 
 ............
 
